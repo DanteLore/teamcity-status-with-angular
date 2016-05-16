@@ -1,0 +1,44 @@
+<div>
+  <style>
+	.glyphicon-refresh-animate {
+		-animation: spin 1s infinite linear;
+		-webkit-animation: spin2 1s infinite linear;
+	}
+
+	@-webkit-keyframes spin2 {
+		from { -webkit-transform: rotate(0deg);}
+		to { -webkit-transform: rotate(360deg);}
+	}
+
+	@keyframes spin {
+		from { transform: scale(1) rotate(0deg);}
+		to { transform: scale(1) rotate(360deg);}
+	}
+  </style>
+  
+	<div class="page-header">
+		<h1>Build Status <small>from TeamCity</small></h1>
+	</div>
+	  
+    <div class="container-fluid">
+		<div class="row">
+    		<div class="col-md-3" ng-repeat="tile in tiles | orderBy:'status' | filter:nameFilter">
+        		<div ng-class="getPanelClass(tile)">
+               <h5><span ng-class="getGlyphClass(tile)" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;{{ tile.name | limitTo:32 }}{{tile.name.length > 32 ? '...' : ''}} &nbsp; {{ tile.buildCount > 0 ? '(' + tile.buildCount + ')' : ''}} </h5>
+               <p class="panel-body">{{ tile.project }}</p>
+              </div>
+        	</div>
+    	</div>
+    </div>
+	<br/><br/><br/><br/><br/><br/>
+  
+  <nav class="navbar navbar-default navbar-fixed-bottom">
+  <div class="container-fluid">
+    <p class="navbar-text navbar-left">
+		<input type="text" ng-model="nameFilter"/>&nbsp;&nbsp;<span class="glyphicon glyphicon-filter" aria-hidden="true"></span>&nbsp;&nbsp;
+		<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate" ng-hide="!statusVisible"></span>
+	</p>
+  </div>
+</nav>
+  
+</div>
