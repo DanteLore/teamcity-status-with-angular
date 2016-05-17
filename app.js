@@ -48,7 +48,12 @@ buildApp.config(function($routeProvider){
 				})
 				.then(buildFactory.getRunningBuilds)
 				.then(function(data) {
-					$scope.runningBuilds = data.data.build.map(function(row) { return row.buildTypeId })
+					if(data.data.build) {
+						$scope.runningBuilds = data.data.build.map(function(row) { return row.buildTypeId })
+					}
+					else {
+						$scope.runningBuilds = []
+					}
 				})
 				.then(function() {
 					$scope.builds = $scope.buildResponses.map(function(b) { return buildFactory.decodeBuild(b, $scope.runningBuilds); });
