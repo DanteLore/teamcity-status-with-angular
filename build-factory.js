@@ -6,7 +6,7 @@ angular.module('buildApp').factory('buildFactory', function($http) {
 	};
 	
 	var getBuildStatus = function(id) {
-		return $http.get('http://tc/guestAuth/app/rest/builds?locator=buildType:' + id + ',start:0,count:1&fields=build(id,status,state,buildType(name,id,projectName))');
+		return $http.get('http://tc/guestAuth/app/rest/builds?locator=buildType:' + id + ',start:0,count:1&fields=build(id,status,state,buildType(name,id,projectName,paused))');
 	};
 	
 	factory.getRunningBuilds = function() {
@@ -35,6 +35,7 @@ angular.module('buildApp').factory('buildFactory', function($http) {
 				'status': build.status,
 				'state': state,
 				'project': build.buildType.projectName,
+                'paused': build.buildType.paused,
 				'projectGroup': build.buildType.projectName.split('::')[0].trim()
 		}
 	};
@@ -43,8 +44,8 @@ angular.module('buildApp').factory('buildFactory', function($http) {
 		var grouped = groupBy(builds, function(x) { return x.projectGroup });
 		var tiles = []
 		grouped.forEach(function(group) {
-			var badChildren = group.filter(function(b) { return b.status == 'FAILURE' })
-			var goodChildren = group.filter(function(b) { return b.status != 'FAILURE' })
+			var badChildren = group.filter(function(b) { return !b.paused && b.status == 'FAILURE' })
+			var goodChildren = group.filter(function(b) { return b.paused || b.status != 'FAILURE' })
 			
 			badChildren.forEach(function(b) { tiles.push(b) })
 			
